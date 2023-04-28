@@ -4,6 +4,8 @@
 # Date: 2023/04/28 15:19
 # --------------------------------------------
 import csv
+
+import torch
 from torch.utils.data import Dataset
 from transformers import AutoTokenizer, BertTokenizer
 
@@ -28,7 +30,6 @@ class AgNewsDataset(Dataset):
         self.tokenizer = BertTokenizer.from_pretrained(model_path) #加载tokenizer
         self.mask = self.tokenizer.mask_token # 获取tokenizer中mask标签</mask>
         self.mask_id = self.tokenizer.mask_token_id # 词表中</mask>对应的id
-        print(f'self.mask:{self.mask} self.mask_id:{self.mask_id}')
 
         self.max_length = max_length
         self.pattern_id = pattern_id
@@ -72,7 +73,6 @@ class AgNewsDataset(Dataset):
 
 
     def get_mlm_labels(self, input_ids):
-        print(input_ids)
         label_idx = input_ids.index(self.mask_id)
         labels = [-1] * len(input_ids)
         labels[label_idx] = 1
@@ -84,12 +84,25 @@ class AgNewsDataset(Dataset):
     def __getitem__(self, idx):
         text_a, text_b, label = self.examples[idx]
         feature = self.encode(text_a, text_b)
+        input_ids = feature.input_ids
+        token_type_ids = feature.token_type_ids
+        attention_mask = feature.attention_mask
 
         # get_mask_positions
         input_ids = feature.input_ids.tolist()[0]
         mlm_labels = self.get_mlm_labels(input_ids)
+        return input_ids, token_type_ids, attention_mask, mlm_labels, label
 
-        return feature, mlm_labels, label
+
+def collate_fn(batch):
+    input_ids, token_type_ids, attention_mask, mlm_labels, labels = zip(*batch)
+    mlm_labels = torch.stack([torch.Tensor(mlm_label).long() for mlm_label in mlm_labels])
+    labels = torch.stack([torch.Tensor([label]).long() for label in labels])
+
+    return input_ids, token_type_ids, attention_mask, mlm_labels, labels
+
+
+
 
 
 
