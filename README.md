@@ -41,7 +41,7 @@ cd scripts
 bash submit.sh
 ```
 
-> 如果要修改相应参数最好不要源码，
+> 如果要修改相应参数最好不要修改源码，
 > 可以在 `scripts/submit.sh` 中修改相应参数并执行，
 > 或者复制 `submit.sh` 修改相应的参数并执行(例如修改learning rate 为1.5e-5)将文件命名为submit_lr1.5e-5.sh 然后执行
 ```shell
