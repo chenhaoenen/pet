@@ -17,3 +17,28 @@ python -m src.train \
   --model_path $MODEL_PATH \
   --train_data_path  $TRAIN_DATA_PATH \
   --eval_data_path $EVAL_DATA_PATH
+
+####################################################
+
+python -m src.train \
+  --epochs 50 \
+  --batch_size 8 \
+  --max_seq_length 256 \
+  --learning_rate 1e-5 \
+  --log_freq 100 \
+  --eval_freq 500 \
+  --model_path $MODEL_PATH \
+  --train_data_path  $TRAIN_DATA_PATH \
+  --eval_data_path $EVAL_DATA_PATH
+
+####################################################
+python -m src.train \
+  --epochs 50 \
+  --batch_size 8 \
+  --max_seq_length 256 \
+  --learning_rate 1.2e-5 \
+  --log_freq 100 \
+  --eval_freq 500 \
+  --model_path $MODEL_PATH \
+  --train_data_path  $TRAIN_DATA_PATH \
+  --eval_data_path $EVAL_DATA_PATH

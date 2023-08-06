@@ -31,3 +31,5 @@ test/
 docker/
 cache/
 docker/
+download/
+model/
